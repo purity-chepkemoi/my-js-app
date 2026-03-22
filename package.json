@@ -1,0 +1,18 @@
+{
+  "name": "my-js-app",
+  "version": "1.0.0",
+  "description": "A JavaScript project with CI/CD pipeline, Jest, SonarQube",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^30.3.0"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
