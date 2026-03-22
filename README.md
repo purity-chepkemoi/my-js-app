@@ -344,3 +344,106 @@ Code -> Jest -> Coverage -> SonarQube -> Quality Report
 # Conclusion
 
 You now have a working DevSecOps pipeline for a JavaScript project with testing, security scanning, and code quality analysis automated through GitHub Actions.
+
+
+
+## What happened to sonarqube coverage? Read this and resolve it
+
+
+Your app
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+Your test
+test('simple addition', () => {
+  expect(2 + 2).toBe(4);
+});
+Problem (very important)
+
+Your test:
+
+Does NOT import your app
+Does NOT call your route /
+Does NOT execute any code in src/
+
+So SonarQube correctly says:
+
+Coverage: 0%
+2. The real fix (step-by-step)
+
+You need to make your app testable.
+
+Step 1: Split your app into two files
+src/server.js (export the app)
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
+module.exports = app;
+src/index.js (start the server)
+const app = require('./server');
+
+const PORT = 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+Why this matters
+server.js → testable (no listening)
+index.js → runs the app
+3. Install testing tool for APIs
+npm install --save-dev supertest
+4. Write a REAL test
+__tests__/server.test.js
+const request = require('supertest');
+const app = require('../src/server');
+
+test('GET / should return Hello World', async () => {
+  const res = await request(app).get('/');
+
+  expect(res.statusCode).toBe(200);
+  expect(res.text).toBe('Hello World');
+});
+5. Run tests again
+npm test -- --coverage
+6. What happens now
+Before:
+Test → runs math only → app not touched → coverage = 0%
+After:
+Test → calls / route → Express handler runs → coverage increases
+7. What SonarQube will now show
+
+Instead of:
+
+0% coverage
+
+You’ll get something like:
+
+60% - 100% coverage (depending on tested code)
+8. Key DevSecOps lesson
+
+Coverage is NOT about:
+
+2 + 2
+
+Coverage IS about:
+
+How much of your application code was executed during tests
+9. Quick checklist
+
+Make sure you have:
+
+src/server.js exporting app
+src/index.js starting server
+__tests__/server.test.js calling routes
+supertest installed
+npm test -- --coverage generating coverage
