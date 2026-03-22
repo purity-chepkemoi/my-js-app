@@ -145,6 +145,8 @@ sonar.sources=src
 sonar.tests=__tests__
 sonar.javascript.lcov.reportPaths=coverage/lcov.info
 sonar.sourceEncoding=UTF-8
+# SonarQube server URL (only needed if using self-hosted SonarQube)
+sonar.host.url=http://100.26.197.202:9000
 ```
 
 Notes:
