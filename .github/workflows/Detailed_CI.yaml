@@ -1,7 +1,5 @@
 name: Node.js CI Pipeline
 
-name: Node.js CI Pipeline
-
 # ==========================
 # LEGEND (for learners):
 # ==========================
@@ -37,7 +35,7 @@ jobs:
   # ==========================
 
   job2_setup:
-    name: Job 2: Setup Environment 🟦
+    name: Setup Environment 🟦
     runs-on: ubuntu-latest
     needs: job1_checkout
 
