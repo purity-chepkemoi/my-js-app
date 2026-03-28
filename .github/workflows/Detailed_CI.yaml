@@ -34,7 +34,7 @@ jobs:
   # Job 2: Setup Environment & Run test
   # =====================================
 
-  job2_setup:
+  job2_Test:
     name: Run test 🟦
     runs-on: ubuntu-latest
     needs: job1_checkout
@@ -66,12 +66,12 @@ jobs:
         # Explanation: Executes automated tests and generates coverage reports
 
   # ==========================
-  # Job 4: Security Scan
+  # Job 3: Security Scan
   # ==========================
-  job4_security:
+  job3_security:
     name:  Security & Secret Scans 🟦
     runs-on: ubuntu-latest
-    needs: job3_test
+    needs: job2_Test
 
     steps:
       # Step 4.1: Checkout code again
@@ -94,12 +94,12 @@ jobs:
         # Explanation: Scans files and packages for known vulnerabilities (CVEs)
 
   # ==========================
-  # Job 5: Code Quality
+  # Job 4: Code Quality
   # ==========================
-  job5_code_quality:
+  job4_code_quality:
     name:  Static Code Analysis 🟦
     runs-on: ubuntu-latest
-    needs: job3_test
+    needs: job3_security
     steps:
       # Step 5.1: Checkout code
       - name: 5.1 Checkout code 🟩
@@ -118,14 +118,14 @@ jobs:
         # Explanation: Performs code quality analysis, coverage check, and detects code smells
 
   # ==========================
-  # Job 6: Build / Package
+  # Job 5 Build / Package
   # ==========================
-  job6_build:
+  job5_build:
     name: Build / Package 🟦
     runs-on: ubuntu-latest
     needs: 
-      - job5_code_quality
-      - job4_security
+      - job4_code_quality
+  
 
     steps:
       # Step 6.1: Checkout code
