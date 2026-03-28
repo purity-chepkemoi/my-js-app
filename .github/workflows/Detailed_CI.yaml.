@@ -1,4 +1,4 @@
-name: Node.js CI Pipeline
+name: CI Pipeline
 
 # ==========================
 # LEGEND (for learners):
@@ -54,6 +54,7 @@ jobs:
         with:
           node-version: 18
         # Explanation: Installs Node.js runtime to run npm commands
+
 
       # Step 2.3: Install dependencies
       - name: 2.3 Install dependencies 🟩
