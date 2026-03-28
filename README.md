@@ -1,388 +1,124 @@
-# my-js-app
-Sample JavaScript project demonstrating DevSecOps: automated tests with Jest, code coverage reporting, secret scanning with Gitleaks, and code quality analysis with SonarQube via GitHub Actions
-# JavaScript DevSecOps CI/CD Pipeline (Beginner Guide)
-
-This guide walks you through building a complete DevSecOps pipeline for a JavaScript application using:
-
-* Node.js / npm
-* Jest (testing and coverage)
-* Gitleaks (secret scanning)
-* SonarQube (code quality and security)
-* GitHub Actions (CI/CD automation)
 
 ---
 
-# What You Will Achieve
+# ParoCyber DevSecOps Pipeline
 
-By following this guide, you will:
+This repository demonstrates a **beginner-friendly DevSecOps CI/CD pipeline** for a Node.js application with automated testing, code coverage, secret scanning, vulnerability analysis, and code quality checks.
 
-* Create a Node.js application
-* Write and run tests using Jest
-* Generate code coverage reports
-* Scan for secrets using Gitleaks
-* Analyze code quality using SonarQube
-* Automate everything using GitHub Actions
+The goal is to help beginners understand CI/CD and DevSecOps concepts while providing a working example.
 
 ---
 
-# Step 1: Create Your Project Folder
+## Project Philosophy
 
-Open your terminal:
+* **Simple first**: Quick setup to run tests, scans, and CI/CD automation
+* **Detailed next**: Learn each folder, command, workflow, and concept step by step
+
+---
+
+## Simple Guide
+
+1. **Clone the repository**
 
 ```bash
-mkdir my-js-app
+git clone <YOUR_REPO_URL>
 cd my-js-app
 ```
 
----
-
-# Step 2: Initialize Node.js Project
+2. **Install dependencies**
 
 ```bash
-npm init -y
+npm install
 ```
 
-This creates a `package.json` file that stores your project configuration and dependencies.
-
----
-
-# Step 3: Install Dependencies
-
-## Install Jest (testing)
+3. **Run tests and generate coverage**
 
 ```bash
-npm install --save-dev jest
+npm test
 ```
 
-Explanation:
+4. **Check GitHub Actions workflows**
 
-* `--save-dev` installs Jest as a development dependency
-* Updates `package.json`, `package-lock.json`, and `node_modules/`
-
-## Install Express (optional)
-
-```bash
-npm install express
-```
+* `.github/workflows/simple.yaml` – Quick/simple pipeline for beginners
+* `.github/workflows/detailed.yaml` – Step-by-step pipeline for learning DevSecOps
 
 ---
 
-## Update `package.json`
+## Project Structure
+
+```text
+my-js-app/
+├── src/
+│   ├── server.js         # Exports Express app for testing
+│   └── index.js          # Starts the server
+├── __tests__/
+│   └── example.test.js   # API tests using Supertest
+├── .github/
+│   └── workflows/
+│       ├── simple.yaml   # Quick CI/CD workflow
+│       └── detailed.yaml # Step-by-step workflow
+├── .gitignore            # Files/folders Git should ignore
+├── package.json          # Project metadata, dependencies, scripts
+├── package-lock.json     # Locks dependency versions
+├── sonar-project.properties # SonarQube/SonarCloud configuration
+└── node_modules/         # Installed packages (auto-generated)
+```
+
+---
+
+## Folder/File Purpose
+
+| Folder/File                | Purpose                                       |
+| -------------------------- | --------------------------------------------- |
+| `src/`                     | Application code                              |
+| `__tests__/`               | Unit and API tests (Jest + Supertest)         |
+| `.github/workflows/`       | CI/CD automation workflows                    |
+| `.gitignore`               | Files to exclude from Git commits             |
+| `package.json`             | Project metadata, dependencies, and scripts   |
+| `package-lock.json`        | Locks dependency versions for reproducibility |
+| `sonar-project.properties` | SonarQube/SonarCloud analysis configuration   |
+| `node_modules/`            | Local installed packages (auto-generated)     |
+
+---
+
+## package.json Explained
 
 ```json
 {
   "name": "my-js-app",
   "version": "1.0.0",
+  "description": "A JavaScript project with CI/CD pipeline, Jest, SonarCloud",
+  "license": "ISC",
+  "type": "commonjs",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^5.2.1"
   },
   "devDependencies": {
-    "jest": "^29.0.0"
+    "jest": "^30.3.0",
+    "supertest": "^6.3.3"
   }
 }
 ```
 
----
+**Explanation:**
 
-# Step 4: Create Application Code
-
-Create a source folder:
-
-```bash
-mkdir src
-```
-
-Create `src/index.js`:
-
-```javascript
-const express = require('express');
-const app = express();
-const PORT = 3000;
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-```
+* `dependencies` – Packages required to run the application
+* `devDependencies` – Packages for development and testing
+* `scripts` – Commands that can be run with `npm run <script>`
+* `main` – Entry point of the app
+* `type` – Module system (CommonJS)
 
 ---
 
-# Step 5: Add Tests (Jest)
+## Application Code
 
-Create test folder:
+### `src/server.js` – Testable App
 
-```bash
-mkdir __tests__
-```
-
-Create `__tests__/example.test.js`:
-
-```javascript
-test('simple addition works', () => {
-  expect(2 + 2).toBe(4);
-});
-```
-
-Notes:
-
-* Test files must end with `.test.js` or `.spec.js`
-* Jest automatically detects files in `__tests__/`
-
----
-
-# Step 6: Add SonarQube Configuration
-
-Create `sonar-project.properties` in the root folder:
-
-```properties
-sonar.projectKey=my-js-app
-sonar.sources=src
-sonar.tests=__tests__
-sonar.javascript.lcov.reportPaths=coverage/lcov.info
-sonar.sourceEncoding=UTF-8
-# SonarQube server URL (only needed if using self-hosted SonarQube)
-sonar.host.url=http://100.26.197.202:9000
-```
-
-Notes:
-
-* Remove `sonar.organization` if using self-hosted SonarQube
-* Keep coverage path for Jest integration
-
----
-
-# Step 7: Project Structure
-
-```
-my-js-app/
-├── src/
-│   └── index.js
-├── __tests__/
-│   └── example.test.js
-├── package.json
-├── package-lock.json
-├── sonar-project.properties
-```
-
----
-
-# Step 8: Initialize Git
-
-```bash
-git init
-```
-
-Create `.gitignore`:
-
-```
-node_modules/
-coverage/
-```
-
-Add and commit:
-
-```bash
-git add .
-git commit -m "Initial project setup"
-```
-
----
-
-# Step 9: Push to GitHub
-
-Create a repository on GitHub and then run:
-
-```bash
-git remote add origin <YOUR_REPO_URL>
-git branch -M main
-git push -u origin main
-```
-
----
-
-# Step 10: Add GitHub Actions Workflow
-
-Create:
-
-```
-.github/workflows/ci.yml
-```
-
-Add:
-
-```yaml
-name: DevSecOps Pipeline
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-  workflow_dispatch:
-
-jobs:
-  pipeline:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test -- --coverage
-
-      - name: Run Gitleaks scan
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v2
-        with:
-          args: >
-            -Dsonar.projectKey=my-js-app
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-```
-
----
-
-# Step 11: Add GitHub Secrets
-
-Go to your repository:
-
-Settings → Secrets → Actions
-
-Add:
-
-| Name           | Value                               |
-| -------------- | ----------------------------------- |
-| SONAR_TOKEN    | Your SonarQube token                |
-| SONAR_HOST_URL | Example: http://100.26.197.202:9000 |
-| GITHUB_TOKEN   | Already provided                    |
-
----
-
-# Step 12: Trigger Pipeline
-
-```bash
-git add .
-git commit -m "Add CI/CD pipeline"
-git push
-```
-
----
-
-# Step 13: Verify Pipeline
-
-Go to GitHub → Actions and review logs.
-
-Expected steps:
-
-* Checkout repository
-* Install dependencies
-* Run Jest tests
-* Generate coverage
-* Run Gitleaks scan
-* Run SonarQube analysis
-
----
-
-# Pipeline Flow
-
-```
-Code -> Jest -> Coverage -> SonarQube -> Quality Report
-           |
-           -> Gitleaks -> Secret Detection
-           |
-           -> GitHub Actions -> Automation
-```
-
----
-
-# DevSecOps Pipeline Summary
-
-| Step     | Tool           | Purpose                |
-| -------- | -------------- | ---------------------- |
-| CI/CD    | GitHub Actions | Automates pipeline     |
-| Build    | npm / Node.js  | Install dependencies   |
-| Test     | Jest           | Run tests and coverage |
-| Security | Gitleaks       | Detect secrets         |
-| Quality  | SonarQube      | Analyze code quality   |
-
----
-
-# Optional Improvements
-
-* Add ESLint for code linting
-* Enforce SonarQube quality gates
-* Add Docker support
-* Add deployment stage
-
----
-
-# Final Notes
-
-* Ensure SonarQube is reachable from your CI runner
-* Use correct `SONAR_HOST_URL`
-* Keep secrets secure using GitHub Secrets
-
----
-
-# Conclusion
-
-You now have a working DevSecOps pipeline for a JavaScript project with testing, security scanning, and code quality analysis automated through GitHub Actions.
-
-
-
-## What happened to sonarqube coverage? Read this and resolve it
-
-
-Your app
-const express = require('express');
-const app = express();
-const PORT = 3000;
-
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-Your test
-test('simple addition', () => {
-  expect(2 + 2).toBe(4);
-});
-Problem (very important)
-
-Your test:
-
-Does NOT import your app
-Does NOT call your route /
-Does NOT execute any code in src/
-
-So SonarQube correctly says:
-
-Coverage: 0%
-2. The real fix (step-by-step)
-
-You need to make your app testable.
-
-Step 1: Split your app into two files
-src/server.js (export the app)
+```js
 const express = require('express');
 const app = express();
 
@@ -391,61 +127,141 @@ app.get('/', (req, res) => {
 });
 
 module.exports = app;
-src/index.js (start the server)
-const app = require('./server');
+```
 
+### `src/index.js` – Start Server
+
+```js
+const app = require('./server');
 const PORT = 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-Why this matters
-server.js → testable (no listening)
-index.js → runs the app
-3. Install testing tool for APIs
-npm install --save-dev supertest
-4. Write a REAL test
-__tests__/server.test.js
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+```
+
+---
+
+## Tests – `__tests__/example.test.js`
+
+```js
 const request = require('supertest');
 const app = require('../src/server');
 
-test('GET / should return Hello World', async () => {
+test('GET /', async () => {
   const res = await request(app).get('/');
-
   expect(res.statusCode).toBe(200);
   expect(res.text).toBe('Hello World');
 });
-5. Run tests again
-npm test -- --coverage
-6. What happens now
-Before:
-Test → runs math only → app not touched → coverage = 0%
-After:
-Test → calls / route → Express handler runs → coverage increases
-7. What SonarQube will now show
+```
 
-Instead of:
+---
 
-0% coverage
+## .gitignore
 
-You’ll get something like:
+```text
+node_modules/
+dist/
+build/
+.env
+coverage/
+.DS_Store
+```
 
-60% - 100% coverage (depending on tested code)
-8. Key DevSecOps lesson
+---
 
-Coverage is NOT about:
+## CI/CD Workflows
 
-2 + 2
+### Simple Workflow – `simple.yaml`
 
-Coverage IS about:
+Steps: checkout → install → test → secret scan → Sonar analysis
 
-How much of your application code was executed during tests
-9. Quick checklist
+```yaml
+on:
+  workflow_dispatch:
 
-Make sure you have:
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-src/server.js exporting app
-src/index.js starting server
-__tests__/server.test.js calling routes
-supertest installed
-npm test -- --coverage generating coverage
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - run: npm install
+
+      - run: npm test -- --coverage
+
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          args: >
+            -Dsonar.projectKey=samuel-nartey_my-js-app
+            -Dsonar.organization=samuel-nartey
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+```
+
+---
+
+## SonarCloud vs Self-Hosted SonarQube
+
+| Feature      | SonarCloud    | Self-Hosted SonarQube       |
+| ------------ | ------------- | --------------------------- |
+| Server Setup | Cloud-hosted  | You manage server           |
+| URL          | Not required  | Required (`sonar.host.url`) |
+| Token        | Required      | Required                    |
+| Plugins      | Pre-installed | Can install custom plugins  |
+
+**Example `sonar-project.properties`**
+
+```properties
+# Unique project key
+sonar.projectKey=my-js-app
+
+# Source folder
+sonar.sources=src
+
+# Test folder
+sonar.tests=__tests__
+
+# Jest coverage report
+sonar.javascript.lcov.reportPaths=coverage/lcov.info
+
+# Source encoding
+sonar.sourceEncoding=UTF-8
+
+# SonarQube server URL (self-hosted only)
+sonar.host.url=http://100.26.197.202:9000
+```
+
+---
+
+## Optional Improvements
+
+* Add ESLint for code linting
+* Configure SonarCloud quality gates
+* Dockerize the app and add container scanning
+* Extend security scans with Trivy or additional scanners
+
+---
+
+## Conclusion
+
+This repository provides a **complete JavaScript DevSecOps pipeline** with:
+
+* Unit and API testing (Jest + Supertest)
+* Coverage reporting
+* GitHub Actions CI/CD workflow
+* Secret scanning with Gitleaks
+* Code quality analysis (SonarCloud or self-hosted SonarQube)
+
+It is beginner-friendly, detailed, and provides a foundation to explore advanced DevSecOps concepts.
+
+---
